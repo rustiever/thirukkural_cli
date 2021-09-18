@@ -1,0 +1,11 @@
+version: '3'
+
+env:
+  HOME: /home/sharan
+
+dotenv: ['{{.HOME}}/.env']
+
+tasks:
+  build:
+    cmds:
+      - go build -ldflags "-X github.com/rustiever/thirukkural_cli/cmd.apiKey=$APIKEY" -o tl

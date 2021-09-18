@@ -17,17 +17,12 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/spf13/cobra"
-
-	"github.com/spf13/viper"
 )
 
 var (
-	// apiKey cfgFile string = "","secrets.yml"
-	cfgFile string = "secrets.yml"
-	apiKey  string = ""
+	apiKey string = ""
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -36,7 +31,8 @@ var rootCmd = &cobra.Command{
 	Short: "Get your thirukkrals at commandline",
 	Long:  `A longer description `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Welcome")
+		fmt.Println("Welcome to Thirukkural")
+		fmt.Println("Please run ./tl get [1-1330] to see your favourite kural")
 	},
 }
 
@@ -47,7 +43,7 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	// cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
@@ -61,16 +57,16 @@ func init() {
 }
 
 // initConfig reads in config file and ENV variables if set.
-func initConfig() {
-	viper.SetConfigFile(cfgFile)
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatalf("Error while reading config file %s", err)
-	}
+// func initConfig() {
+// 	viper.SetConfigFile(cfgFile)
+// 	err := viper.ReadInConfig()
+// 	if err != nil {
+// 		log.Fatalf("Error while reading config file %s", err)
+// 	}
 
-	value, ok := viper.Get("apiKey").(string)
-	if !ok {
-		log.Fatalf("Invalid type assertion")
-	}
-	apiKey = value
-}
+// 	value, ok := viper.Get("apiKey").(string)
+// 	if !ok {
+// 		log.Fatalf("Invalid type assertion")
+// 	}
+// 	apiKey = value
+// }
