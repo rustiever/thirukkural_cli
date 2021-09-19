@@ -1,18 +1,3 @@
-/*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 package cmd
 
 import (
@@ -41,14 +26,16 @@ var getCmd = &cobra.Command{
 			return nil
 		} else if n, ok := strconv.Atoi(args[0]); ok != nil {
 			return errors.New("pass valid number ")
-		} else if (n-0)*(1330-n) <= 0 { // check whether number is between 1-1330
+		} else if (n-0)*(1331-n) <= 0 { // check whether number is between 1-1330
 			return errors.New("number must range from 1-1330")
 		}
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		var kural Kural
-		var err error
+		var (
+			kural Kural
+			err   error
+		)
 		if len(args) == 0 {
 			kural, err = fetchKural("rnd")
 			if err != nil {
@@ -61,12 +48,11 @@ var getCmd = &cobra.Command{
 			}
 		}
 
-		// printKural(kural)
-		printk(kural)
+		printKural(kural)
 	},
 }
 
-func printk(kural Kural) {
+func printKural(kural Kural) {
 	t := table.NewWriter()
 
 	t.AppendRow(table.Row{"Number", kural.Number})
