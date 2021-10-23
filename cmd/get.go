@@ -13,7 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// getCmd represents the get command
+// getCmd fetches the kural for a given number, otherwise random kural will be returned
 var getCmd = &cobra.Command{
 	Use:   "get [ number from 1-1330 ]",
 	Short: "Gets Kural for  specified number",
@@ -21,13 +21,13 @@ var getCmd = &cobra.Command{
 			If you don't specify then you get a random kural`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {
-			return errors.New("pass only one valid number, otherwise don't pass")
+			return errors.New("only one valid number is expected")
 		} else if len(args) == 0 {
 			return nil
 		} else if n, ok := strconv.Atoi(args[0]); ok != nil {
-			return errors.New("pass valid number ")
+			return errors.New("valid number is expected")
 		} else if (n-0)*(1331-n) <= 0 { // check whether number is between 1-1330
-			return errors.New("number must range from 1-1330")
+			return errors.New("number must be in range from 1-1330")
 		}
 		return nil
 	},
@@ -52,6 +52,11 @@ var getCmd = &cobra.Command{
 	},
 }
 
+func init() {
+	rootCmd.AddCommand(getCmd)
+}
+
+// prints Kural Data in tabular format
 func printKural(kural Kural) {
 	t := table.NewWriter()
 
@@ -65,15 +70,13 @@ func printKural(kural Kural) {
 	t.SetColumnConfigs([]table.ColumnConfig{
 		{Number: 2, WidthMax: 150},
 	})
-	// t.AppendRow(table.Row{"Urai-1", kural.Urai1})
-	// t.AppendRow(table.Row{"Urai-2", kural.Urai2, "Urai Author", kural.Urai2Author})
-	// t.AppendRow(table.Row{"Urai-3", kural.Urai3, "Urai Author", kural.Urai3Author})
 
 	t.SetStyle(table.StyleRounded)
 
 	fmt.Println(t.Render())
 }
 
+// calls API to fetch the Kural for given valid number
 func fetchKural(number string) (kural Kural, err error) {
 	var apiUrl string = "http://getthirukural.appspot.com/api/3.0/kural/" + number + "?appid=" + apiKey + "&format=json"
 	resp, err := http.Get(apiUrl)
@@ -91,6 +94,7 @@ func fetchKural(number string) (kural Kural, err error) {
 	return kural, nil
 }
 
+// Kural struct to decode the json payload from API
 type Kural struct {
 	Paal        string `json:"paal"`
 	Urai3       string `json:"urai3"`
@@ -106,33 +110,3 @@ type Kural struct {
 	Line2       string `json:"line2"`
 	Line1       string `json:"line1"`
 }
-
-func init() {
-	rootCmd.AddCommand(getCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// getCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// getCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-}
-
-// func printKural(kural Kural) {
-// 	fmt.Printf("Number: %v\n", kural.Number)
-// 	fmt.Printf("Paal: %v\n", kural.Paal)
-// 	fmt.Printf("Athigaram: %v\n", kural.Athigaram)
-// 	fmt.Printf("Iyal: %v\n", kural.Iyal)
-// 	fmt.Printf("Line1: %v\n", kural.Line1)
-// 	fmt.Printf("Line2: %v\n", kural.Line2)
-// 	fmt.Printf("Translation: %v\n", kural.Translation)
-// 	fmt.Printf("Athigaram: %v\n", kural.Urai1)
-// 	fmt.Printf("Athigaram: %v\n", kural.Urai1Author)
-// 	fmt.Printf("Athigaram: %v\n", kural.Urai2)
-// 	fmt.Printf("Athigaram: %v\n", kural.Urai2Author)
-// 	fmt.Printf("Athigaram: %v\n", kural.Urai3)
-// 	fmt.Printf("Athigaram: %v\n", kural.Urai3Author)
-// }
